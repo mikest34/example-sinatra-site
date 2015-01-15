@@ -19,24 +19,25 @@ module DemoSite
     configure do
       # Set your Google Analytics ID here if you have one:
       # set :google_analytics_id, 'UA-12345678-1'
- 
-      set :layouts_dir, 'views/_layouts'
-      set :partials_dir, 'views/_partials'
+      set :views, 'app/views' 
+      set :layouts_dir, 'app/views/_layouts'
+      set :partials_dir, 'app/views/_partials'
     end
 
     helpers do
-      def show_404
-        status 404
-        @page_name = '404'
-        @page_title = '404'
-        erb :'404', :layout => :with_sidebar,
+      def show_error (code = 404, message = 'Not Found')
+        status code
+        @page_name = message
+        @page_title = message
+        @page_header = @page_title
+        erb :'error', :layout => :template,
                     :layout_options => {:views => settings.layouts_dir}
       end
     end
 
 
     not_found do
-      show_404
+      show_error(404)
     end
 
 
@@ -49,8 +50,10 @@ module DemoSite
     get '/' do
       @page_name = 'home'
       @page_title = 'Home page'
+      @page_header = @page_title
+      @page_subhead = 'You are visiting the example site!'
       erb :index,
-        :layout => :full_width,
+        :layout => :template,
         :layout_options => {:views => settings.layouts_dir}
     end
 
@@ -58,11 +61,15 @@ module DemoSite
     # Routes for pages that have unique things...
 
     get '/special/' do
+      require_relative 'app/models/test'
       @page_name = 'special'
       @page_title = 'A special page'
+      @page_header = @page_title
+      @page_subhead = 'You are visiting the example site!'
       @time = Time.now
+      @test = Test.getTestData
       erb :special,
-        :layout => :with_sidebar,
+        :layout => :template,
         :layout_options => {:views => settings.layouts_dir}
     end
 
@@ -83,7 +90,8 @@ module DemoSite
       if pages.has_key?(path)
         @page_name = pages[path][:page_name]
         @page_title = pages[path][:title]
-        layout = :with_sidebar
+        @page_header = @page_title
+        layout = :template
         if pages[path].has_key?(:layout)
           layout = pages[path][:layout].to_sym
         end
@@ -91,7 +99,7 @@ module DemoSite
           :layout => layout,
           :layout_options => {:views => settings.layouts_dir}
       else
-        show_404
+        show_error(404)
       end
     end
 

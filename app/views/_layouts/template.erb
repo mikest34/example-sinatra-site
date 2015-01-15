@@ -1,0 +1,23 @@
+<%= erb :header, :views => settings.partials_dir %>
+
+
+<div class="container main-body">	
+
+	<div class="row">
+
+		<div class="col-md-12 main-title">
+
+			<% if @page_header %><h1><%= @page_header %></h1><% end %>
+
+			<% if @page_subhead %><p><%= @page_subhead %></p><% end %>
+
+		</div>
+
+	</div>
+
+	<%= yield %>
+
+</body>
+
+<%= erb :footer, :views => settings.partials_dir %>
+
