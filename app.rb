@@ -1,5 +1,6 @@
 require "sinatra/base"
 require "sinatra/reloader"
+require 'rack-flash'
 
 module DemoSite
   class App < Sinatra::Base
@@ -17,6 +18,8 @@ module DemoSite
     end
 
     configure do
+      enable :sessions
+      use Rack::Flash
       # Set your Google Analytics ID here if you have one:
       # set :google_analytics_id, 'UA-12345678-1'
       set :views, 'app/views' 
@@ -73,6 +76,53 @@ module DemoSite
         :layout_options => {:views => settings.layouts_dir}
     end
 
+    # contact page
+
+    get '/contact/' do
+      @page_name = 'contact'
+      @page_title = 'Contact Us'
+      @page_header = @page_title
+      @page_subhead = 'You are visiting the example site!'
+      erb :contact,
+        :layout => :template,
+        :layout_options => {:views => settings.layouts_dir}
+    end
+
+    # a sample post of a contact form
+    post '/contact/' do
+
+      if params[:email] && params[:email] != '' && params[:name] && params[:name] != '' && params[:message] && params[:message] != ''
+
+        require 'pony'
+
+        Pony.mail({
+          :from => 'from@email.com',
+          :to => 'to@email.com',
+          :subject => "Email From " + params[:name],
+          :html_body => erb(:email, :locals => { :email => params } ),
+          :via => :smtp,
+          :via_options => {
+            :address              => 'smtp.zoho.com',
+            :port                 => '587',
+            :enable_starttls_auto => true,
+            :user_name            => 'username',
+            :password             => '',
+            :authentication       => :plain, 
+            :domain               => "localhost.localdomain" 
+          }
+        })
+
+        flash[:success] = 'Your message has been submitted'
+
+      else 
+
+        flash[:error] = 'There must be some error with the form'
+
+      end
+
+      redirect '/contact/'
+
+    end
 
     # Catch-all for /something/else/etc/ pages which just display templates.
     get %r{/([\w\/-]+)/$} do |path|
