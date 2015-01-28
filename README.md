@@ -1,6 +1,29 @@
 # Example Sinatra, Bootstrap, SASS and Compass site
 
+Adapted from the repo below created by Bergcloud
+
 https://github.com/bergcloud/example-sinatra-site
+
+## Key Additions
+
+I added a few things here that I found I was having to do repetively on the few different Sinatra sites I maintain.
+
+  * Changed the template structure to the Bootstrap defaults I prefer to work with...
+  * Moved the column settings to the views for more granular control (just my preference)
+  * Went a little more railsy by adding an "app" structure for the views and also added a "models" folder.
+  * Made the error handler function a little more generic
+  * Created a flash partial and added Rack flash to also mimic another rails convention and added BS alerts
+  # Added a contact form and the pony gem to send email
+  * Added rspec and capybara and set up a few basic tests
+
+Some future additions on my wishlist (feel free to contribute)
+
+  * add support for more icon sets instead of just glyphicons
+  * update the error handler to send an email when an error occurs
+  * add some ORM (maybe active record or another)
+  * more robust error handling
+
+## Bergcloud's Original Readme
 
 I recently made two new websites which had to be done fairly quickly (but
 still look good), be simple technically, be responsive, and be dynamic. There
@@ -14,7 +37,7 @@ someone who wants to do something similar. You can see a skeleton of the
 project, with a few example pages, [on GitHub](https://github.com/bergcloud
 /example-sinatra-site). Get a copy and run it with:
     
-    $ git clone https://github.com/bergcloud/example-sinatra-site
+    $ git clone https://github.com/mikest34/example-sinatra-site
     $ cd example-sinatra-site
     $ compass watch .
 
